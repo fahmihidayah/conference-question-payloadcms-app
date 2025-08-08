@@ -83,3 +83,19 @@ export const createQuestionAction = async (questionData: QuestionFormSchema) => 
     console.log("event is ", event)
     return questionResult;
 }
+
+export const deleteQuestion = async (questionId: number) => {
+    const payload = await getPayload({config});
+
+    try {
+        const result = await payload.delete({
+            collection: "questions",
+            id: questionId.toString()
+        });
+
+        return { success: true, data: result };
+    } catch (error) {
+        console.error("Error deleting question:", error);
+        return { success: false, error: "Failed to delete question" };
+    }
+}

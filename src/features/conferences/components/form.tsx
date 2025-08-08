@@ -59,7 +59,7 @@ export const ConferenceForm = () => {
                                 {...register("title")}
                                 type="text"
                                 id="title"
-                                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 ${
+                                className={`text-black w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 ${
                                     errors.title 
                                         ? 'border-red-300 bg-red-50 focus:border-red-500' 
                                         : 'border-gray-200 bg-white focus:border-gray-500 hover:border-gray-300'
@@ -88,7 +88,7 @@ export const ConferenceForm = () => {
                                 {...register("description")}
                                 id="description"
                                 rows={4}
-                                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 ${
+                                className={`text-black w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 ${
                                     errors.description 
                                         ? 'border-red-300 bg-red-50 focus:border-red-500' 
                                         : 'border-gray-200 bg-white focus:border-gray-500 hover:border-gray-300'
