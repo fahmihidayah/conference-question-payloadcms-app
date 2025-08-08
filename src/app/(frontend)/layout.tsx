@@ -40,7 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           />
 
           <Header /> */}
-          <Navbar isAuthenticated={user !== undefined} userName={user.user.name ?? ""}/>
+          <Navbar isAuthenticated={user !== undefined} userName={user?.user?.name ?? ""}/>
           {children}
           {/* <Footer /> */}
         </Providers>
