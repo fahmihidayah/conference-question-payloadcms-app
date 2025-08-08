@@ -39,11 +39,6 @@ export default function QuestionForm({ conferenceSlug, conferenceName }: Questio
             setSubmitMessage("Pertanyaan berhasil dikirim!");
             reset();
             
-            // Kembali ke detail konferensi setelah 2 detik
-            setTimeout(() => {
-                router.push(`/conferences/${conferenceSlug}`);
-            }, 2000);
-            
         } catch (error) {
             console.error("Gagal mengirim pertanyaan:", error);
             setSubmitMessage("Gagal mengirim pertanyaan. Silakan coba lagi.");

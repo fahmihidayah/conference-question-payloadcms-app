@@ -1,7 +1,10 @@
 'use client';
+import { getListQuestionByConferenceId } from "@/features/questions/actions";
 import { Conference, Question } from "@/payload-types";
+import { usePusher } from "@/utilities/pusher/usePusher";
 import { MessageCircle, Calendar, User, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface ConferenceDetailProps {
     conference?: Conference;
@@ -10,6 +13,16 @@ interface ConferenceDetailProps {
 
 export default function ConferenceDetail({ conference, questions }: ConferenceDetailProps) {
     const router = useRouter();
+
+    const [listQuestions, setListQuestion] = useState(questions);
+
+    usePusher('questions-channel', 'new-question', conference?.slug ?? "", () => {
+        const request = async () => {
+            const result = await getListQuestionByConferenceId(conference?.id)
+            setListQuestion(result.docs)
+        }   
+        request()
+    })
 
     const formatDate = (dateString: string | null | undefined) => {
         if (!dateString) return 'Tidak diketahui';
@@ -42,7 +55,7 @@ export default function ConferenceDetail({ conference, questions }: ConferenceDe
                         </div>
                         <div className="flex items-center gap-1">
                             <MessageCircle className="w-4 h-4" />
-                            <span>{questions?.length} Pertanyaan</span>
+                            <span>{listQuestions?.length} Pertanyaan</span>
                         </div>
                     </div>
                 </div>
@@ -57,7 +70,7 @@ export default function ConferenceDetail({ conference, questions }: ConferenceDe
                     </div>
 
                     <div className="p-6">
-                        {questions?.length === 0 ? (
+                        {listQuestions?.length === 0 ? (
                             <div className="text-center py-12">
                                 <MessageCircle className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                                 <p className="text-gray-500 text-lg">Belum ada pertanyaan</p>
@@ -67,7 +80,7 @@ export default function ConferenceDetail({ conference, questions }: ConferenceDe
                             </div>
                         ) : (
                             <div className="space-y-4 w-full overflow-y-auto">
-                                {questions?.map((question, index) => (
+                                {listQuestions?.map((question, index) => (
                                     <div
                                         key={question.id}
                                         className={`flex justify-start w-full`}

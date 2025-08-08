@@ -2,12 +2,29 @@
 import config from "@payload-config";
 import { getPayload } from "payload";
 import { QuestionFormSchema } from "../type";
+import { equal } from "assert";
+import { sendEvent } from "@/utilities/pusher/pusher-server";
 
+
+export const getListQuestionByConferenceId = async (id?: number ) => {
+    const payload = await getPayload({config})
+
+    const questions = await payload.find({
+        collection : "questions",
+        where: {
+            conference : {
+                equals: id
+            }
+        }
+    })
+
+    return questions;
+}
 export const createQuestion = async (form : FormData) => {
     const payload = await getPayload({config});
     const name = form.get("name") as string;
     const question = form.get('question') as string;
-    const conferencesSlug = form.get("slug");
+    const conferencesSlug = form.get("slug") as string;
     const conferenceResult = await payload.find({
         collection : "conferences",
         where : {
@@ -61,5 +78,8 @@ export const createQuestionAction = async (questionData: QuestionFormSchema) => 
         }
     });
 
+
+    const event = await sendEvent(questionData.conference)
+    console.log("event is ", event)
     return questionResult;
 }

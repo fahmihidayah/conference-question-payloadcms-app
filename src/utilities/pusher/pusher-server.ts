@@ -9,12 +9,6 @@ export const pusher = new Pusher({
   useTLS: true,
 });
 
-// lib/pusher-client.ts - Client-side Pusher instance
-import PusherClient from 'pusher-js';
-
-export const pusherClient = new PusherClient(
-  process.env.NEXT_PUBLIC_PUSHER_KEY!,
-  {
-    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
-  }
-);
+export const sendEvent =  async (questionSlug : string) => {
+    return await pusher.trigger('questions-channel', 'new-question', questionSlug);
+}
