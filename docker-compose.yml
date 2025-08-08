@@ -1,31 +1,56 @@
-version: '3'
+version: '3.8'
 
 services:
-  payload:
-    image: node:18-alpine
+  # KonfQ Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
     ports:
       - '3000:3000'
-    volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "yarn install && yarn dev"
+    environment:
+      # Database connection
+      DATABASE_URI: postgresql://postgres:password@db:5432/question_app
+      # Application secrets (use strong secrets in production)
+      PAYLOAD_SECRET: a859fdb94b012f5115d6c134
+      NEXT_PUBLIC_SERVER_URL: http://localhost:3000
+      CRON_SECRET: your-cron-secret-here
+      PREVIEW_SECRET: your-preview-secret-here
+      # Node.js configuration
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: 1
+      NODE_OPTIONS: --no-deprecation
     depends_on:
-      - mongo
-    env_file:
-      - .env
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-  mongo:
-    image: mongo:latest
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: question_app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
     ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
+      - '5432:5432'
     volumes:
-      - data:/data/db
-    logging:
-      driver: none
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d question_app"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
 
 volumes:
-  data:
-  node_modules:
+  db_data:
+    driver: local
