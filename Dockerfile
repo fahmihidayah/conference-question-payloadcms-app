@@ -42,6 +42,20 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_OPTIONS="--no-deprecation"
 
+# PayloadCMS requires PAYLOAD_SECRET for build process
+
+ARG PAYLOAD_SECRET
+ARG DATABASE_NAME
+ARG DATABASE_URI
+ARG NEXT_PUBLIC_SERVER_URL
+
+ENV PAYLOAD_SECRET=${PAYLOAD_SECRET}
+ENV DATABASE_NAME=${DATABASE_NAME}
+ENV DATABASE_URI=${DATABASE_URI}
+ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
+ENV PAYLOAD_FORCE_READ_ONLY=${PAYLOAD_FORCE_READ_ONLY}
+
+
 # Generate Payload types and importmap (optional - continue if fails)
 RUN pnpm run generate:types || echo "Types generation skipped"
 RUN pnpm run generate:importmap || echo "Importmap generation skipped"
@@ -56,6 +70,19 @@ FROM base AS runner
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_OPTIONS="--no-deprecation"
+
+# Default environment variables (override these when running the container)
+
+ARG PAYLOAD_SECRET
+ARG DATABASE_NAME
+ARG DATABASE_URI
+ARG NEXT_PUBLIC_SERVER_URL
+
+ENV PAYLOAD_SECRET=${PAYLOAD_SECRET}
+ENV DATABASE_NAME=${DATABASE_NAME}
+ENV DATABASE_URI=${DATABASE_URI}
+ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
+ENV PAYLOAD_FORCE_READ_ONLY=${PAYLOAD_FORCE_READ_ONLY}
 
 # Create user for security
 RUN addgroup --system --gid 1001 nodejs
