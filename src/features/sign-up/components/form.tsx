@@ -90,7 +90,7 @@ export const SignUpForm = () => {
                                 {...register("name")}
                                 type="text"
                                 id="name"
-                                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
+                                className={`text-black w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
                                     errors.name 
                                         ? 'border-red-300 bg-red-50 focus:border-red-500' 
                                         : 'border-blue-200 bg-blue-50 focus:border-blue-500 hover:border-blue-300'
@@ -119,7 +119,7 @@ export const SignUpForm = () => {
                                 {...register("email")}
                                 type="email"
                                 id="email"
-                                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
+                                className={`text-black w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
                                     errors.email 
                                         ? 'border-red-300 bg-red-50 focus:border-red-500' 
                                         : 'border-blue-200 bg-blue-50 focus:border-blue-500 hover:border-blue-300'
@@ -148,7 +148,7 @@ export const SignUpForm = () => {
                                 {...register("password")}
                                 type="password"
                                 id="password"
-                                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
+                                className={`text-black w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
                                     errors.password 
                                         ? 'border-red-300 bg-red-50 focus:border-red-500' 
                                         : 'border-blue-200 bg-blue-50 focus:border-blue-500 hover:border-blue-300'
@@ -177,7 +177,7 @@ export const SignUpForm = () => {
                                 {...register("confirmPassword")}
                                 type="password"
                                 id="confirmPassword"
-                                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
+                                className={`text-black w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
                                     errors.confirmPassword 
                                         ? 'border-red-300 bg-red-50 focus:border-red-500' 
                                         : 'border-blue-200 bg-blue-50 focus:border-blue-500 hover:border-blue-300'
