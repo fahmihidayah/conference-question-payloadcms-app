@@ -1,17 +1,21 @@
 import { findByIdConferences } from "@/features/conferences/actions";
 import ConferenceDetail from "@/features/conferences/components/detail";
+import isPageCanBeAccessed from "@/utilities/protectPageUtils";
 import config from "@payload-config";
 import { equal } from "assert";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getPayload } from "payload";
 
 type Props = {
-    params : Promise<{
-        slug : string
+    params: Promise<{
+        slug: string
     }>
 }
 
-export default async function CreateQuestion(props : Props) {
+export default async function CreateQuestion(props: Props) {
+if(! (await isPageCanBeAccessed())) {
+        redirect("/auth")
+    }
 
     const payload = await getPayload({
         config

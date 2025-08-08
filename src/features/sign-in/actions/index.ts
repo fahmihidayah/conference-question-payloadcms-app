@@ -3,6 +3,8 @@
 import { getPayload } from "payload";
 import { SignInFormSchema } from "../types"
 import config from "@payload-config";
+import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
 
 export const signInAction = async (signInForm : SignInFormSchema) => {
     const payload = await getPayload({config})
@@ -15,5 +17,13 @@ export const signInAction = async (signInForm : SignInFormSchema) => {
         }
     });
 
+    const cookiesNext = await cookies();
+
+    if(token.token) {
+        cookiesNext.set("payload-token", token.token)
+    }
+    revalidateTag("/")
+
     return token;
 }
+

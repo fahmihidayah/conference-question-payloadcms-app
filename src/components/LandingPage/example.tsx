@@ -31,18 +31,7 @@ const LandingPageWithAuth = () => {
     checkAuthStatus();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      // Add your logout logic here
-      // Example: await logout();
-      setIsAuthenticated(false);
-      setUserName(undefined);
-      // Redirect to home page or refresh
-      window.location.href = '/';
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
+  // No need for handleLogout - the Navbar handles it internally
 
   if (loading) {
     return (
@@ -56,7 +45,6 @@ const LandingPageWithAuth = () => {
     <LandingPage 
       isAuthenticated={isAuthenticated}
       userName={userName}
-      onLogout={handleLogout}
     />
   );
 };

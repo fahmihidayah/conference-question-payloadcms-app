@@ -1,13 +1,18 @@
 import { findAllConferences } from "@/features/conferences/actions"
 import ListConferences from "@/features/conferences/components/list-conferences"
+import isPageCanBeAccessed from "@/utilities/protectPageUtils";
 import { Pencil, Plus } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 type Props = {
     params : Promise<{}>
 }
 
 export default async function Page() {
+    if(! (await isPageCanBeAccessed())) {
+        redirect("/auth")
+    }
 
     const conferencesDocs = await findAllConferences();
 

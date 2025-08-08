@@ -2,18 +2,17 @@
 
 import Link from 'next/link';
 import { MessageCircle, Users, Zap, ArrowRight, Play } from 'lucide-react';
-// import Navbar from '../Navbar';
+import Navbar from '../Navbar';
 
 interface LandingPageProps {
   isAuthenticated?: boolean;
   userName?: string;
-  onLogout?: () => void;
 }
 
-const LandingPage = ({ isAuthenticated = false, userName, onLogout }: LandingPageProps) => {
+const LandingPage = ({ isAuthenticated = false, userName }: LandingPageProps) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      
+
+    <>
       
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
@@ -244,7 +243,7 @@ const LandingPage = ({ isAuthenticated = false, userName, onLogout }: LandingPag
           </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 };
 

@@ -24,6 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const user = await getMeUser();
 
+  console.log("user is : ", user);
   return (
     <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
       <head>
@@ -31,7 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
-      <body>
+      <body className='min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50'>
         <Providers>
           {/* <AdminBar
             adminBarProps={{
@@ -40,7 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           />
 
           <Header /> */}
-          <Navbar isAuthenticated={user !== undefined} userName={user?.user?.name ?? ""}/>
+          <Navbar isAuthenticated={user.user !== null} userName={user?.user?.name ?? ""}/>
           {children}
           {/* <Footer /> */}
         </Providers>
