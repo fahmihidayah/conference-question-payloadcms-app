@@ -47,7 +47,7 @@ const Navbar = ({ isAuthenticated = false, userName }: NavbarProps) => {
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-100 relative z-50">
+    <nav className="bg-white shadow-sm border-b border-gray-100 relative z-50" style={{ WebkitTapHighlightColor: 'transparent' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -60,13 +60,15 @@ const Navbar = ({ isAuthenticated = false, userName }: NavbarProps) => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors duration-200"
+              onTouchStart={() => {}} 
+              className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors duration-200 touch-manipulation select-none"
               aria-label="Toggle mobile menu"
+              style={{ WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}
             >
               {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
+                <X className="h-6 w-6 pointer-events-none" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-6 w-6 pointer-events-none" />
               )}
             </button>
           </div>
@@ -155,19 +157,23 @@ const Navbar = ({ isAuthenticated = false, userName }: NavbarProps) => {
                   Jelajahi Konferensi
                 </Link>
                 
-                <Link
-                  href="/auth"
+                <button
+                  onClick={() => {
+                    router.push("/auth")
+                  }}
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md font-medium transition-colors duration-200"
                 >
                   Masuk
-                </Link>
+                </button>
                 
-                <Link
-                  href="/sign-up"
+                <button
+                onClick={() => {
+                  router.push("/sign-up")
+                }}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105"
                 >
                   Daftar Gratis
-                </Link>
+                </button>
               </>
             )}
           </div>
@@ -176,8 +182,8 @@ const Navbar = ({ isAuthenticated = false, userName }: NavbarProps) => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute w-full">
-          <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200 shadow-lg">
+        <div className="md:hidden absolute w-full top-full left-0 right-0 z-50 transform transition-all duration-200 ease-out">
+          <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200 shadow-lg" style={{ WebkitTransform: 'translateZ(0)' }}>
             {isAuthenticated ? (
               <>
                 {/* User Info */}
@@ -223,8 +229,10 @@ const Navbar = ({ isAuthenticated = false, userName }: NavbarProps) => {
                     setIsMobileMenuOpen(false);
                     handleLogout();
                   }}
+                  onTouchStart={() => {}}
                   disabled={isLoggingOut}
-                  className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-red-700 hover:bg-red-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-red-700 hover:bg-red-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation select-none"
+                  style={{ WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}
                 >
                   {isLoggingOut ? (
                     <>
@@ -244,26 +252,36 @@ const Navbar = ({ isAuthenticated = false, userName }: NavbarProps) => {
                 <Link
                   href="/conferences"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false)
+                  }}
                 >
                   Jelajahi Konferensi
                 </Link>
                 
-                <Link
-                  href="/auth"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                <button
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200 touch-manipulation select-none"
+                  onClick={() => {
+                      router.push("/auth")
+                     setIsMobileMenuOpen(false)
+                  }}
+                  onTouchStart={() => {}}
+                  style={{ WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}
                 >
                   Masuk
-                </Link>
+                </button>
                 
-                <Link
-                  href="/sign-up"
-                  className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200 mx-3"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                <button
+                  className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200 mx-3 touch-manipulation select-none"
+                  onClick={() => {
+                      router.push("/sign-up")
+                    setIsMobileMenuOpen(false)
+                  }}
+                  onTouchStart={() => {}}
+                  style={{ WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}
                 >
                   Daftar Gratis
-                </Link>
+                </button>
               </>
             )}
           </div>
@@ -273,11 +291,13 @@ const Navbar = ({ isAuthenticated = false, userName }: NavbarProps) => {
       {/* Mobile Menu Overlay */}
       {(isProfileMenuOpen || isMobileMenuOpen) && (
         <div 
-          className="fixed inset-0 z-40"
+          className="fixed inset-0 z-40 bg-black bg-opacity-20"
           onClick={() => {
             setIsProfileMenuOpen(false);
             setIsMobileMenuOpen(false);
           }}
+          onTouchStart={() => {}}
+          style={{ WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}
         />
       )}
     </nav>
