@@ -90,7 +90,7 @@ export default function QuestionForm({ conferenceSlug, conferenceName }: Questio
                             {...register("name")}
                             type="text"
                             id="name"
-                            className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 ${
+                            className={`text-black w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 ${
                                 errors.name 
                                     ? 'border-red-300 bg-red-50 focus:border-red-500' 
                                     : 'border-gray-200 bg-white focus:border-gray-500 hover:border-gray-300'
@@ -119,7 +119,7 @@ export default function QuestionForm({ conferenceSlug, conferenceName }: Questio
                             {...register("question")}
                             id="question"
                             rows={6}
-                            className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 resize-vertical ${
+                            className={`text-black w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 resize-vertical ${
                                 errors.question 
                                     ? 'border-red-300 bg-red-50 focus:border-red-500' 
                                     : 'border-gray-200 bg-white focus:border-gray-500 hover:border-gray-300'
