@@ -1,6 +1,6 @@
 'use client';
 import { Conference } from "@/payload-types";
-import { Share2, Trash2, ExternalLink } from "lucide-react";
+import { Share2, Trash2, ExternalLink, Copy } from "lucide-react";
 import { PaginatedDocs } from "payload";
 import { useState } from "react";
 import { deleteConferenceById } from "../actions";
@@ -14,6 +14,7 @@ export default function ListConferences({
 }) {
     const [isDeleting, setIsDeleting] = useState<number | null>(null);
     const router = useRouter();
+    
 
     const handleDelete = async (id: number) => {
         if (confirm("Apakah Anda yakin ingin menghapus konferensi ini?")) {
@@ -29,11 +30,18 @@ export default function ListConferences({
         }
     };
 
+    async function handleCopy(conference: Conference) {
+         navigator.clipboard.writeText(window.location.origin + `/conferences/${conference.slug || ''}`);
+        alert("Link konferensi berhasil disalin ke clipboard!");
+    }
+
+    
+
     const handleShare = (conference: Conference) => {
         if (navigator.share) {
             navigator.share({
                 title: conference.title,
-                url: window.location.origin + `/conferences/${conference.slug || ''}`,
+                url: window.location.origin + `/conferences/${conference.slug || ''}/question`,
             });
         } else {
             navigator.clipboard.writeText(window.location.origin + `/conferences/${conference.slug || ''}`);
@@ -54,6 +62,8 @@ export default function ListConferences({
                                 {conference.title}
                             </h2>
                             <div className="flex gap-2 transition-opacity duration-200 z-10">
+                                
+                                
                                 <button
                                     onClick={(e) => {
                                         e.preventDefault()
@@ -81,6 +91,17 @@ export default function ListConferences({
                                         <Trash2 className="w-4 h-4" />
                                     )}
                                 </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        handleCopy(conference)
+                                    }}
+                                    className="p-2 text-gray-500 hover:text-green-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                    title="Bagikan konferensi"
+                                >
+                                    <Copy  className="w-4 h-4" />
+                                </button>
                             </div>
                         </div>
                         
@@ -100,6 +121,8 @@ export default function ListConferences({
                                 {conference.createdAt ? new Date(conference.createdAt).toLocaleDateString() : ''}
                             </div>
                         </div>
+
+                        
                     </Link>
                 );
             })
