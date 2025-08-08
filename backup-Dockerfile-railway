@@ -1,14 +1,13 @@
-# Multi-stage Docker build for Next.js + PayloadCMS Application
-# This Dockerfile creates an optimized production build
+# Railway-optimized Docker build for Next.js + PayloadCMS Application
+# This Dockerfile is specifically optimized for Railway deployment
 
 # Stage 1: Base image with Node.js
 FROM node:22.12.0-alpine AS base
 
-# Install dependencies needed for native modules and sharp
+# Install dependencies needed for native modules
 RUN apk add --no-cache \
     libc6-compat \
     dumb-init \
-    wget \
     && rm -rf /var/cache/apk/*
 
 # Install pnpm directly (bypass corepack signature issues)
@@ -17,15 +16,17 @@ RUN npm install -g pnpm@latest
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml* ./
-
 # Stage 2: Install dependencies
 FROM base AS deps
 
-# Install dependencies with pnpm
+# Copy package files
+COPY package.json pnpm-lock.yaml* ./
+
+# Set environment to prevent download prompts
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 ENV CI=true
+
+# Install dependencies
 RUN pnpm install --frozen-lockfile --production=false
 
 # Stage 3: Build the application
@@ -42,7 +43,7 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_OPTIONS="--no-deprecation"
 
-# Generate Payload types and importmap (optional - continue if fails)
+# Generate Payload types and importmap
 RUN pnpm run generate:types || echo "Types generation skipped"
 RUN pnpm run generate:importmap || echo "Importmap generation skipped"
 
@@ -58,10 +59,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_OPTIONS="--no-deprecation"
 
 # Create user for security
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
-# Copy public assets
+# Copy public assets if they exist
 COPY --from=builder /app/public ./public
 
 # Create .next directory with proper ownership
@@ -71,20 +72,17 @@ RUN mkdir .next && chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Note: SQLite database files are not copied in production (use PostgreSQL)
+
 # Switch to non-root user
 USER nextjs
 
-# Expose port
+# Expose port (Railway will assign the actual port)
 EXPOSE 3000
 
-# Set port environment variable
+# Set port environment variable (Railway will override this)
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:3000/api/health || exit 1
-
-# Start the application with dumb-init
-ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "server.js"]
+# Start the application
+CMD ["dumb-init", "--", "node", "server.js"]

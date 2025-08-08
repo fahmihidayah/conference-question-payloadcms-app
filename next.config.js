@@ -10,6 +10,25 @@ const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
 const nextConfig = {
   // Enable standalone output for Docker
   output: 'standalone',
+  
+  // ESLint configuration - make warnings instead of errors during build
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: false, // Set to true if you want to ignore all ESLint errors during build
+    
+    // Custom ESLint configuration directories
+    dirs: ['src', 'pages', 'components', 'lib', 'utils'],
+  },
+  
+  // TypeScript configuration
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    ignoreBuildErrors: false, // Set to true if you want to ignore TypeScript errors during build
+  },
+  
   images: {
     remotePatterns: [
       ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
@@ -22,6 +41,7 @@ const nextConfig = {
       }),
     ],
   },
+  
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {
       '.cjs': ['.cts', '.cjs'],
@@ -31,6 +51,7 @@ const nextConfig = {
 
     return webpackConfig
   },
+  
   reactStrictMode: true,
   redirects,
 }
