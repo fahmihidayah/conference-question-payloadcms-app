@@ -122,14 +122,21 @@ export default function ConferenceDetail({ conference, questions }: ConferenceDe
                                                     </div>
                                                     <button
                                                         onClick={() => handleDeleteQuestion(question.id)}
+                                                        onTouchStart={() => {}}
                                                         disabled={isDeleting === question.id}
-                                                        className="p-2 rounded-full hover:bg-red-100 text-red-600 hover:text-red-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        className="p-3 rounded-full hover:bg-red-100 text-red-600 hover:text-red-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation select-none min-w-[44px] min-h-[44px] flex items-center justify-center"
                                                         title="Hapus pertanyaan"
+                                                        style={{ 
+                                                            WebkitTapHighlightColor: 'transparent', 
+                                                            touchAction: 'manipulation',
+                                                            WebkitUserSelect: 'none',
+                                                            userSelect: 'none'
+                                                        }}
                                                     >
                                                         {isDeleting === question.id ? (
                                                             <div className="w-4 h-4 animate-spin border-2 border-red-600 border-t-transparent rounded-full"></div>
                                                         ) : (
-                                                            <Trash2 className="w-4 h-4" />
+                                                            <Trash2 className="w-4 h-4 pointer-events-none" />
                                                         )}
                                                     </button>
                                                 </div>
