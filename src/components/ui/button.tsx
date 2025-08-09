@@ -21,6 +21,7 @@ const buttonVariants = cva(
         clear: 'p-0 h-auto w-auto min-h-0 min-w-0',
       },
       variant: {
+        default: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800',
         primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800',
         secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 active:bg-gray-400',
         success: 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800',
@@ -29,6 +30,7 @@ const buttonVariants = cva(
         outline: 'border-2 border-blue-600 text-blue-600 bg-transparent hover:bg-blue-50 active:bg-blue-100',
         ghost: 'text-gray-700 bg-transparent hover:bg-gray-100 active:bg-gray-200',
         link: 'text-blue-600 bg-transparent hover:underline p-0 h-auto font-normal',
+        inline: 'text-blue-600 bg-transparent hover:underline p-0 h-auto font-normal',
       },
     },
   },
