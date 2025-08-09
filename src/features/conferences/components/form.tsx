@@ -6,6 +6,8 @@ import { useState } from "react";
 import { conferenceFormSchema, ConferenceFormSchema } from "../type";
 import { createConferenceAction } from "../actions";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export const ConferenceForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,58 +50,41 @@ export const ConferenceForm = () => {
                     {/* Form */}
                     <div className="space-y-6">
                         {/* Title Field */}
-                        <div>
-                            <label 
-                                htmlFor="title" 
-                                className="block text-sm font-medium text-gray-900 mb-2"
-                            >
-                                Judul Konferensi
-                            </label>
-                            <input
-                                {...register("title")}
-                                type="text"
-                                id="title"
-                                className={`text-black w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 ${
-                                    errors.title 
-                                        ? 'border-red-300 bg-red-50 focus:border-red-500' 
-                                        : 'border-gray-200 bg-white focus:border-gray-500 hover:border-gray-300'
-                                }`}
-                                placeholder="Masukkan judul konferensi"
-                            />
-                            {errors.title && (
-                                <p className="mt-2 text-sm text-red-600 flex items-center">
-                                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                    </svg>
-                                    {errors.title.message}
-                                </p>
-                            )}
-                        </div>
+                        <Input
+                            {...register("title")}
+                            type="text"
+                            label="Judul Konferensi"
+                            placeholder="Masukkan judul konferensi"
+                            error={errors.title?.message}
+                            required
+                        />
 
                         {/* Description Field */}
                         <div>
                             <label 
                                 htmlFor="description" 
-                                className="block text-sm font-medium text-gray-900 mb-2"
+                                className="block text-sm font-medium text-gray-700 mb-2"
                             >
                                 Deskripsi
+                                <span className="text-red-500 ml-1">*</span>
                             </label>
                             <textarea
                                 {...register("description")}
                                 id="description"
                                 rows={4}
-                                className={`text-black w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 ${
+                                className={`flex w-full rounded-lg border px-4 py-3 text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 touch-manipulation ${
                                     errors.description 
-                                        ? 'border-red-300 bg-red-50 focus:border-red-500' 
-                                        : 'border-gray-200 bg-white focus:border-gray-500 hover:border-gray-300'
+                                        ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                                        : 'border-gray-300 hover:border-gray-400 focus:border-blue-500'
                                 }`}
                                 placeholder="Masukkan deskripsi konferensi"
+                                style={{
+                                    WebkitTapHighlightColor: 'transparent',
+                                    touchAction: 'manipulation'
+                                }}
                             />
                             {errors.description && (
-                                <p className="mt-2 text-sm text-red-600 flex items-center">
-                                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                    </svg>
+                                <p className="mt-2 text-sm text-red-600">
                                     {errors.description.message}
                                 </p>
                             )}
@@ -107,27 +92,16 @@ export const ConferenceForm = () => {
 
 
                         {/* Submit Button */}
-                        <button
+                        <Button
                             onClick={handleSubmit(onSubmit)}
                             disabled={isSubmitting}
-                            className={`py-3 px-4 rounded-lg font-semibold text-white transition-all duration-200 transform ${
-                                isSubmitting
-                                    ? 'bg-gray-400 cursor-not-allowed'
-                                    : 'bg-gray-600 hover:bg-gray-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
-                            }`}
+                            loading={isSubmitting}
+                            loadingText="Membuat Konferensi..."
+                            variant="primary"
+                            size="default"
                         >
-                            {isSubmitting ? (
-                                <div className="flex items-center justify-center">
-                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Membuat Konferensi...
-                                </div>
-                            ) : (
-                                'Buat Konferensi'
-                            )}
-                        </button>
+                            Buat Konferensi
+                        </Button>
                     </div>
             </div>
         </div>

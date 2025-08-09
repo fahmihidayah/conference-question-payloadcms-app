@@ -23,6 +23,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     };
 
     const baseInputClasses = `
+      text-black
       flex h-12 w-full rounded-lg border px-4 py-3 text-base transition-all duration-200
       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
       disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50
