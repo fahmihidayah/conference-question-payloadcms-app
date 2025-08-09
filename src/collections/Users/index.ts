@@ -21,6 +21,11 @@ export const Users: CollectionConfig = {
       name: 'name',
       type: 'text',
     },
+    {
+      name : "isSuperUser",
+      type : "checkbox",
+      defaultValue: false
+    }
   ],
   timestamps: true,
 }

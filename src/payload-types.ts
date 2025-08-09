@@ -378,6 +378,7 @@ export interface Category {
 export interface User {
   id: number;
   name?: string | null;
+  isSuperUser?: boolean | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1313,6 +1314,7 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  isSuperUser?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

@@ -5,17 +5,25 @@ import { QuestionFormSchema, ConferenceFormSchema } from "../type";
 import config from "@payload-config";
 import { cookies, headers } from "next/headers";
 import { equal } from "assert";
+import { getMeUser } from "@/utilities/getMeUser";
 
 export const findByIdConferences = async (slug: string) => {
-    const payload = await getPayload({config});
+    const payload = await getPayload({ config });
+
+    const user = await getMeUser();
 
     // Cari konferensi berdasarkan slug
     const conferenceResult = await payload.find({
         collection: 'conferences',
         where: {
-            slug: {
-                equals: slug
-            }
+            and: [
+                {
+                    slug: {
+                        equals: slug
+                    }
+                },
+
+            ]
         },
         limit: 1
     });
@@ -45,21 +53,26 @@ export const findByIdConferences = async (slug: string) => {
 }
 
 export const findAllConferences = async () => {
-    const payload = await getPayload({config});
-
+    const payload = await getPayload({ config });
+    const user = await getMeUser();
     return payload.find({
-        collection : "conferences"
+        collection: "conferences",
+        where: {
+            user: {
+                equals: user.user.id
+            }
+        }
     });
 }
 
-export const deleteConference = async (slug : string ) => {
-    const payload = await getPayload({config});
+export const deleteConference = async (slug: string) => {
+    const payload = await getPayload({ config });
 
     const deleted = await payload.delete({
         collection: "conferences",
         where: {
-            slug : {
-                equals : slug
+            slug: {
+                equals: slug
             }
         }
     })
@@ -68,7 +81,7 @@ export const deleteConference = async (slug : string ) => {
 }
 
 export const deleteConferenceById = async (id: number) => {
-    const payload = await getPayload({config});
+    const payload = await getPayload({ config });
 
     try {
         // Pertama cari dan hapus semua pertanyaan terkait
@@ -94,17 +107,17 @@ export const deleteConferenceById = async (id: number) => {
     }
 }
 
-export const creatConference = async (questionFormSchema : QuestionFormSchema) => {
+export const creatConference = async (questionFormSchema: QuestionFormSchema) => {
 
-    const payload = await getPayload({config});
+    const payload = await getPayload({ config });
 
     const slug = questionFormSchema.title.toLowerCase().split(" ").join("-");
 
     const question = await payload.create({
-        collection : "conferences",
-        data : {
-            slug : slug,
-            ... questionFormSchema,
+        collection: "conferences",
+        data: {
+            slug: slug,
+            ...questionFormSchema,
         }
     });
 
@@ -113,17 +126,25 @@ export const creatConference = async (questionFormSchema : QuestionFormSchema) =
 }
 
 export const createConferenceAction = async (conferenceForm: ConferenceFormSchema) => {
-    const payload = await getPayload({config});
-    
-    const slug = conferenceForm.title.toLowerCase().split(" ").join("-");
+    const payload = await getPayload({ config });
 
-    const conference = await payload.create({
-        collection: "conferences",
-        data: {
-            slug: slug,
-            ...conferenceForm,
-        }
-    });
+    const user = await getMeUser();
 
-    return conference;
+    if (user.user !== null) {
+        const slug = conferenceForm.title.toLowerCase().split(" ").join("-");
+
+        const conference = await payload.create({
+            collection: "conferences",
+            data: {
+                slug: slug,
+                title: conferenceForm.title,
+                description: conferenceForm.description,
+                user: user.user
+            }
+        });
+
+        return conference;
+    }
+
+
 }
