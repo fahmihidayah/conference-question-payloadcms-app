@@ -72,7 +72,7 @@ export const ConferenceForm = () => {
                                 {...register("description")}
                                 id="description"
                                 rows={4}
-                                className={`flex w-full rounded-lg border px-4 py-3 text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 touch-manipulation ${
+                                className={`text-black flex w-full rounded-lg border px-4 py-3 text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 touch-manipulation ${
                                     errors.description 
                                         ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
                                         : 'border-gray-300 hover:border-gray-400 focus:border-blue-500'
