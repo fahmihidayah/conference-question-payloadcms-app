@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
     
     if (!payloadToken?.value) {
       // No token found, redirect to login
-      const loginUrl = new URL('/admin', request.url);
+      const loginUrl = new URL('/auth', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
