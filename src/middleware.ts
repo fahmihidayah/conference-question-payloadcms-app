@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getMeUser } from './utilities/getMeUser';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -14,45 +15,17 @@ export async function middleware(request: NextRequest) {
     
     if (!payloadToken?.value) {
       // No token found, redirect to login
-      const loginUrl = new URL('/auth', request.url);
+      const loginUrl = new URL('/admin', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
 
     // Get the base URL for API calls
     const baseUrl = request.nextUrl.origin;
-
-    // Call the users/me API to verify token and get user
-    const meUserResponse = await fetch(`${baseUrl}/api/users/me`, {
-      headers: {
-        Authorization: `JWT ${payloadToken.value}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!meUserResponse.ok) {
-      // Invalid token, redirect to login
-      const loginUrl = new URL('/auth', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      const response = NextResponse.redirect(loginUrl);
-      // Clear invalid token
-      response.cookies.delete('payload-token');
-      return response;
-    }
-
-    const { user } = await meUserResponse.json();
-
-    if (!user) {
-      // No user found, redirect to login
-      const loginUrl = new URL('/auth', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      const response = NextResponse.redirect(loginUrl);
-      response.cookies.delete('payload-token');
-      return response;
-    }
+    const token = await getMeUser();
 
     // Check if user is a super user
-    if (!user.isSuperUser) {
+    if (token.user.isSuperUser) {
       // User is not a super user, redirect to home with error
       const homeUrl = new URL('/', request.url);
       homeUrl.searchParams.set('error', 'unauthorized');

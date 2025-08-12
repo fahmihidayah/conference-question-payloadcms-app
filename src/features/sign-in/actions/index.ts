@@ -27,3 +27,10 @@ export const signInAction = async (signInForm : SignInFormSchema) => {
     return token;
 }
 
+export const signInWithGoogleAction = async () => {
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+    const googleAuthUrl = `${baseUrl}/api/oauth/google`
+    
+    return { redirectUrl: googleAuthUrl }
+}
+

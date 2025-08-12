@@ -13,6 +13,8 @@ import { beforeSyncWithSearch } from '@/search/beforeSync'
 
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
+import { authPlugin } from 'payload-auth-plugin'
+import getAuthPlugin from './auth-plugin'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
@@ -25,6 +27,7 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
 }
 
 export const plugins: Plugin[] = [
+  getAuthPlugin(),
   redirectsPlugin({
     collections: ['pages', 'posts'],
     overrides: {

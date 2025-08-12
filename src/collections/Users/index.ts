@@ -2,7 +2,10 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
 
-export const Users: CollectionConfig = {
+import { withUsersCollection } from "payload-auth-plugin/collection";
+import { deleteLinkedAccounts } from 'payload-auth-plugin/collection/hooks'
+
+export const Users: CollectionConfig = withUsersCollection({
   slug: 'users',
   access: {
     admin: authenticated,
@@ -22,10 +25,14 @@ export const Users: CollectionConfig = {
       type: 'text',
     },
     {
-      name : "isSuperUser",
-      type : "checkbox",
+      name: "isSuperUser",
+      type: "checkbox",
       defaultValue: false
     }
   ],
   timestamps: true,
+  hooks: {
+    afterDelete: [deleteLinkedAccounts('accounts')],
+  }
 }
+)
