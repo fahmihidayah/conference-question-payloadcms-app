@@ -2,9 +2,11 @@
 import { getListQuestionByConferenceId, deleteQuestion } from "@/features/questions/actions";
 import { Conference, Question } from "@/payload-types";
 import { usePusher } from "@/utilities/pusher/usePusher";
-import { MessageCircle, Calendar, User, ArrowLeft, Trash2 } from "lucide-react";
+import { MessageCircle, Calendar, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import QuestionItem from "./question-item";
+import QuestionHighlight from "./question-highlight";
 
 interface ConferenceDetailProps {
     conference?: Conference;
@@ -16,6 +18,8 @@ export default function ConferenceDetail({ conference, questions }: ConferenceDe
 
     const [listQuestions, setListQuestion] = useState(questions);
     const [isDeleting, setIsDeleting] = useState<number | null>(null);
+    const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     usePusher('questions-channel', 'new-question', conference?.slug ?? "", () => {
         const request = async () => {
@@ -52,6 +56,16 @@ export default function ConferenceDetail({ conference, questions }: ConferenceDe
         } finally {
             setIsDeleting(null);
         }
+    };
+
+    const handleQuestionClick = (question: Question) => {
+        setSelectedQuestion(question);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedQuestion(null);
     };
 
     return (
@@ -105,47 +119,15 @@ export default function ConferenceDetail({ conference, questions }: ConferenceDe
                             </div>
                         ) : (
                             <div className="space-y-4 w-full overflow-y-auto">
-                                {listQuestions?.map((question, index) => (
-                                    <div
+                                {listQuestions?.map((question) => (
+                                    <QuestionItem
                                         key={question.id}
-                                        className={`flex justify-start w-full`}
-                                    >
-                                        <div
-                                            className={`w-full p-4 rounded-2xl bg-blue-100 text-white rounded-br-sm shadow-sm relative`}
-                                        >
-                                            <div className="mb-2">
-                                                <div className={`flex items-center justify-between text-x text-blue-800 mb-2`}>
-                                                    <div className="flex items-center gap-2">
-                                                        <User className="w-6 h-6" />
-                                                        <span className="font-medium">{question.name}</span>
-                                                        <span>{formatDate(question.createdAt)}</span>
-                                                    </div>
-                                                    <button
-                                                        onClick={() => handleDeleteQuestion(question.id)}
-                                                        onTouchStart={() => {}}
-                                                        disabled={isDeleting === question.id}
-                                                        className="p-3 rounded-full hover:bg-red-100 text-red-600 hover:text-red-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation select-none min-w-[44px] min-h-[44px] flex items-center justify-center"
-                                                        title="Hapus pertanyaan"
-                                                        style={{ 
-                                                            WebkitTapHighlightColor: 'transparent', 
-                                                            touchAction: 'manipulation',
-                                                            WebkitUserSelect: 'none',
-                                                            userSelect: 'none'
-                                                        }}
-                                                    >
-                                                        {isDeleting === question.id ? (
-                                                            <div className="w-4 h-4 animate-spin border-2 border-red-600 border-t-transparent rounded-full"></div>
-                                                        ) : (
-                                                            <Trash2 className="w-4 h-4 pointer-events-none" />
-                                                        )}
-                                                    </button>
-                                                </div>
-                                                <p className="text-lg leading-relaxed whitespace-pre-wrap text-blue-800">
-                                                    {question.question}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        question={question}
+                                        formatDate={formatDate}
+                                        handleDeleteQuestion={handleDeleteQuestion}
+                                        isDeleting={isDeleting}
+                                        onClick={handleQuestionClick}
+                                    />
                                 ))}
                             </div>
                         )}
@@ -154,6 +136,14 @@ export default function ConferenceDetail({ conference, questions }: ConferenceDe
 
                
             </div>
+            
+            {/* Question Highlight Modal */}
+            <QuestionHighlight
+                question={selectedQuestion}
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                formatDate={formatDate}
+            />
         </div>
     );
 }
