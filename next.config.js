@@ -10,7 +10,11 @@ const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
 const nextConfig = {
   // Enable standalone output for Docker
   output: 'standalone',
-  
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['tanya.kuttabalfatihmalang.com', 'conf-quest.up.railway.app']
+    }
+  },
   // ESLint configuration - make warnings instead of errors during build
   eslint: {
     // Warning: This allows production builds to successfully complete even if
