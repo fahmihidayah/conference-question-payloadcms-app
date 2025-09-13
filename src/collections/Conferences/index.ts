@@ -8,10 +8,12 @@ const Conferences: CollectionConfig = {
     useAsTitle: 'title',
   },
   access: {
+    
     // read: ({ req }) => !!req.user, // hanya moderator (login) yang bisa lihat
-    // create: ({ req }) => !!req.user,
-    // update: ({ req }) => !!req.user,
-    // delete: ({ req }) => !!req.user,
+    read: ({ req }) => !!req.user,
+    create: ({ req }) => true,
+    update: ({ req }) => !!req.user,
+    delete: ({ req }) => !!req.user,
   },
   fields: [
     {
