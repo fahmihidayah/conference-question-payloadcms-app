@@ -1,4 +1,5 @@
 import { slugField } from "@/fields/slug";
+import { read } from "fs";
 import { CollectionConfig } from "payload";
 
 
@@ -11,7 +12,7 @@ const Conferences: CollectionConfig = {
     
     // read: ({ req }) => !!req.user, // hanya moderator (login) yang bisa lihat
     read: ({ req }) => !!req.user,
-    create: ({ req }) => true,
+    create: ({ req }) => !!req.user,
     update: ({ req }) => !!req.user,
     delete: ({ req }) => !!req.user,
   },

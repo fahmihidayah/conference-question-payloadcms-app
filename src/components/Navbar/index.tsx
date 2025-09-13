@@ -86,10 +86,10 @@ const Navbar = ({ isAuthenticated = false, userName }: NavbarProps) => {
                 </Link>
                 
                 <Link
-                  href="/conferences/create"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+                  href="/auto-conferences"
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition-colors duration-200"
                 >
-                  Buat Konferensi
+                  Auto Create Konferensi
                 </Link>
 
                 {/* User Profile Dropdown */}
@@ -116,6 +116,14 @@ const Navbar = ({ isAuthenticated = false, userName }: NavbarProps) => {
                         onClick={() => setIsProfileMenuOpen(false)}
                       >
                         Konferensi Saya
+                      </Link>
+                      
+                      <Link
+                        href="/auto-conferences"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                        onClick={() => setIsProfileMenuOpen(false)}
+                      >
+                        Auto Create Konferensi
                       </Link>
                       
                       <Link
@@ -201,19 +209,11 @@ const Navbar = ({ isAuthenticated = false, userName }: NavbarProps) => {
                 </Link>
                 
                 <Link
-                  href="/conferences/create"
-                  className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200 mx-3"
+                  href="/auto-conferences"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Buat Konferensi
-                </Link>
-
-                <Link
-                  href="/conferences"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Konferensi Saya
+                  Auto Create Konferensi
                 </Link>
                 
                 <Link
