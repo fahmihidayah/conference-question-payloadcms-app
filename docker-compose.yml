@@ -1,56 +1,43 @@
-version: '3.8'
+version: '3'
 
 services:
-  # KonfQ Application
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: runner
+  payload:
+    image: node:18-alpine
     ports:
       - '3000:3000'
-    environment:
-      # Database connection
-      DATABASE_URI: postgresql://postgres:password@db:5432/question_app
-      # Application secrets (use strong secrets in production)
-      PAYLOAD_SECRET: a859fdb94b012f5115d6c134
-      NEXT_PUBLIC_SERVER_URL: http://localhost:3000
-      CRON_SECRET: your-cron-secret-here
-      PREVIEW_SECRET: your-preview-secret-here
-      # Node.js configuration
-      NODE_ENV: production
-      NEXT_TELEMETRY_DISABLED: 1
-      NODE_OPTIONS: --no-deprecation
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  # PostgreSQL Database
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: question_app
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - '5432:5432'
     volumes:
-      - db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d question_app"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-    restart: unless-stopped
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    working_dir: /home/node/app/
+    command: sh -c "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm dev"
+    depends_on:
+      - mongo
+      # - postgres
+    env_file:
+      - .env
+
+  # Ensure your DATABASE_URI uses 'mongo' as the hostname ie. mongodb://mongo/my-db-name
+  mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    command:
+      - --storageEngine=wiredTiger
+    volumes:
+      - data:/data/db
+    logging:
+      driver: none
+
+  # Uncomment the following to use postgres
+  # postgres:
+  #   restart: always
+  #   image: postgres:latest
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
 
 volumes:
-  db_data:
-    driver: local
+  data:
+  # pgdata:
+  node_modules:

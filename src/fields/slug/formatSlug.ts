@@ -3,7 +3,7 @@ import type { FieldHook } from 'payload'
 export const formatSlug = (val: string): string =>
   val
     .replace(/ /g, '-')
-    .replace(/[^\w-]+/g, '')
+    .replace(/[^\w\u0600-\u06FF-]+/g, '')
     .toLowerCase()
 
 export const formatSlugHook =

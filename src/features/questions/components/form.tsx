@@ -1,4 +1,5 @@
 'use client';
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -7,145 +8,187 @@ import { questionFormSchema, QuestionFormSchema } from "../type";
 import { createQuestionAction } from "../actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { User } from "@/payload-types";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface QuestionFormProps {
+    user : User;
     conferenceSlug: string;
     conferenceName?: string;
 }
 
-export default function QuestionForm({ conferenceSlug, conferenceName }: QuestionFormProps) {
+const QuestionForm: React.FC<QuestionFormProps> = ({ user, conferenceSlug, conferenceName }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitMessage, setSubmitMessage] = useState<string | null>(null);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const router = useRouter();
     
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset
-    } = useForm<QuestionFormSchema>({
+    const form = useForm<QuestionFormSchema>({
         resolver: zodResolver(questionFormSchema),
         defaultValues: {
-            name: "",
+            name: user.name ?? "",
+            hideName : false,
             question: "",
             conference: conferenceSlug
         }
     });
 
+    const {
+        reset
+    } = form;
+
     const onSubmit = async (data: QuestionFormSchema) => {
         setIsSubmitting(true);
-        setSubmitMessage(null);
+        setSubmitError(null);
+        setSuccessMessage(null);
         
         try {
             await createQuestionAction(data);
-            setSubmitMessage("Pertanyaan berhasil dikirim!");
+            setSuccessMessage("Pertanyaan berhasil dikirim!");
             reset();
             
         } catch (error) {
             console.error("Gagal mengirim pertanyaan:", error);
-            setSubmitMessage("Gagal mengirim pertanyaan. Silakan coba lagi.");
+            setSubmitError(error instanceof Error ? error.message : "Gagal mengirim pertanyaan. Silakan coba lagi.");
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-white p-4 w-full">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 p-4 w-full">
             <div className="w-full max-w-2xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Ajukan Pertanyaan</h1>
+                    <h1 className="text-3xl font-bold text-blue-900 dark:text-blue-400 mb-2">Ajukan Pertanyaan</h1>
                     {conferenceName && (
-                        <p className="text-gray-600">Untuk: {conferenceName}</p>
+                        <p className="text-blue-600 dark:text-blue-300">Untuk: {conferenceName}</p>
                     )}
                 </div>
 
-                {/* Success/Error Message */}
-                {submitMessage && (
-                    <div className={`mb-6 p-4 rounded-lg ${
-                        submitMessage.includes("successfully") 
-                            ? "bg-green-50 text-green-800 border border-green-200" 
-                            : "bg-red-50 text-red-800 border border-red-200"
-                    }`}>
-                        {submitMessage}
+                {/* Success Message */}
+                {successMessage && (
+                    <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <p className="text-green-700 dark:text-green-400 text-sm">{successMessage}</p>
+                    </div>
+                )}
+
+                {/* Error Message */}
+                {submitError && (
+                    <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                        <p className="text-red-700 dark:text-red-400 text-sm">{submitError}</p>
                     </div>
                 )}
 
                 {/* Form */}
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    {/* Hidden conference field */}
-                    <input
-                        {...register("conference")}
-                        type="hidden"
-                        value={conferenceSlug}
-                    />
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-blue-100 dark:border-gray-700">
+                    <Form  {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            {/* Hidden conference field */}
+                            <FormField
+                                control={form.control}
+                                name='conference'
+                                render={({ field }) => (
+                                    <FormItem className="hidden">
+                                        <FormControl>
+                                            <input
+                                                type="hidden"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
 
-                    {/* Name Field */}
-                    <Input
-                        {...register("name")}
-                        type="text"
-                        label="Nama Anda"
-                        placeholder="Masukkan nama Anda"
-                        error={errors.name?.message}
-                        required
-                    />
+                            {/* Name Field */}
+                            <FormField
+                                control={form.control}
+                                name='name'
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Nama Anda</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type='text'
+                                                placeholder='Masukkan nama Anda'
+                                                disabled={isSubmitting}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                    {/* Question Field */}
-                    <div>
-                        <label 
-                            htmlFor="question" 
-                            className="block text-sm font-medium text-gray-700 mb-2"
-                        >
-                            Pertanyaan Anda
-                            <span className="text-red-500 ml-1">*</span>
-                        </label>
-                        <textarea
-                            {...register("question")}
-                            id="question"
-                            rows={6}
-                            className={`text-black flex w-full rounded-lg border px-4 py-3 text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 touch-manipulation resize-vertical ${
-                                errors.question 
-                                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                                    : 'border-gray-300 hover:border-gray-400 focus:border-blue-500'
-                            }`}
-                            placeholder="Ketik pertanyaan Anda di sini..."
-                            style={{
-                                WebkitTapHighlightColor: 'transparent',
-                                touchAction: 'manipulation'
-                            }}
-                        />
-                        {errors.question && (
-                            <p className="mt-2 text-sm text-red-600">
-                                {errors.question.message}
-                            </p>
-                        )}
-                    </div>
+                            <FormField
+                                control={form.control}
+                                name='hideName'
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-gray-300 dark:border-gray-600 p-4">
+                                        <FormControl>
+                                            <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                                disabled={isSubmitting}
+                                            />
+                                        </FormControl>
+                                        <div className="space-y-1 leading-none">
+                                            <FormLabel>
+                                                Sembunyikan Nama Saya
+                                            </FormLabel>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                Jika dicentang, nama Anda tidak akan ditampilkan saat pertanyaan ditayangkan
+                                            </p>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                    {/* Submit Button */}
-                    <Button
-                        type="submit"
-                        disabled={isSubmitting}
-                        loading={isSubmitting}
-                        loadingText="Mengirim Pertanyaan..."
-                        variant="primary"
-                        size="default"
-                        className="w-full"
-                    >
-                        Kirim Pertanyaan
-                    </Button>
+                            {/* Question Field */}
+                            <FormField
+                                control={form.control}
+                                name='question'
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Pertanyaan Anda
+                                            <span className="text-red-500 dark:text-red-400 ml-1">*</span>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <textarea
+                                                rows={6}
+                                                className="text-gray-900 dark:text-gray-100 flex w-full rounded-lg border bg-white dark:bg-gray-700 px-4 py-3 text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-gray-50 dark:disabled:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 dark:placeholder:text-gray-500 touch-manipulation resize-vertical border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500"
+                                                placeholder="Ketik pertanyaan Anda di sini..."
+                                                disabled={isSubmitting}
+                                                style={{
+                                                    WebkitTapHighlightColor: 'transparent',
+                                                    touchAction: 'manipulation'
+                                                }}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                    {/* Cancel Button */}
-                    <Button
-                        type="button"
-                        onClick={() => router.back()}
-                        variant="ghost"
-                        size="default"
-                        className="w-full"
-                    >
-                        Batal
-                    </Button>
-                </form>
+                            {/* Submit Button */}
+                            <Button
+                                type="submit"
+                                disabled={isSubmitting}
+                                variant="default"
+                                size="default"
+                                className="w-full"
+                            >
+                                {isSubmitting ? "Mengirim Pertanyaan..." : "Kirim Pertanyaan"}
+                            </Button>
+                        </form>
+                    </Form>
+                </div>
             </div>
         </div>
     );
-}
+};
+
+export default QuestionForm;

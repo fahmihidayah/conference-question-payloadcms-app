@@ -1,60 +1,31 @@
-import type { Metadata } from 'next'
-
-import { cn } from '@/utilities/ui'
-import { GeistMono } from 'geist/font/mono'
-import { GeistSans } from 'geist/font/sans'
 import React from 'react'
-
-import { AdminBar } from '@/components/AdminBar'
-import { Footer } from '@/Footer/Component'
-import { Header } from '@/Header/Component'
-import { Providers } from '@/providers'
-import { InitTheme } from '@/providers/Theme/InitTheme'
+import './styles.css'
+import { QueryProvider } from '@/providers/QueryProvider'
+import { ThemeProvider } from '@/providers/ThemeProvider'
+import { Navbar } from '@/components/layouts/navbar'
+import { Metadata } from 'next'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import { draftMode } from 'next/headers'
-
-import './globals.css'
-import { getServerSideURL } from '@/utilities/getURL'
-import Navbar from '@/components/Navbar'
-import { getMeUser } from '@/utilities/getMeUser'
-
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { isEnabled } = await draftMode()
 
 
-  const user = await getMeUser();
+export async function generateMetadata(): Promise<Metadata> {
+    return {
+        title : "KonfQ - Platform Tanya Jawab Konferensi",
+        description : "Platform interaktif untuk tanya jawab konferensi yang memungkinkan audiens berpartisipasi aktif dalam diskusi",
+        openGraph : mergeOpenGraph()
+    }
+}
+export default async function RootLayout(props: { children: React.ReactNode }) {
+  const { children } = props
 
-  console.log("user is : ", user);
   return (
-    <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
-      <head>
-        <InitTheme />
-        <link href="/favicon.ico" rel="icon" sizes="32x32" />
-        <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
-      </head>
-      <body className='min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50'>
-        <Providers>
-          {/* <AdminBar
-            adminBarProps={{
-              preview: isEnabled,
-            }}
-          />
-
-          <Header /> */}
-          <Navbar isAuthenticated={user.user !== null} userName={user?.user?.name ?? ""}/>
-          {children}
-          {/* <Footer /> */}
-        </Providers>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider>
+          <QueryProvider>
+            <main className='bg-blue-100 dark:bg-blue-900/30'>{children}</main>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
-}
-
-export const metadata: Metadata = {
-  metadataBase: new URL(getServerSideURL()),
-  openGraph: mergeOpenGraph(),
-  twitter: {
-    card: 'summary_large_image',
-    creator: '@payloadcms',
-  },
 }

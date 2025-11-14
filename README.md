@@ -1,412 +1,263 @@
-# KonfQ - Platform Tanya Jawab Konferensi
+# 🚀 Payload Starter
 
-![KonfQ Logo](https://img.shields.io/badge/KonfQ-Platform%20Konferensi-blue?style=for-the-badge)
-![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+A modern, full-stack web application built with **Payload CMS**, **Next.js 15**, and **React 19**. This starter template includes a beautiful, responsive UI with dark/light theme support, authentication, and a complete admin panel.
 
-Platform tanya jawab konferensi yang memungkinkan interaksi real-time antara pembicara dan audiens untuk pengalaman yang lebih engaging. Dibangun dengan Next.js dan PayloadCMS dengan antarmuka yang sepenuhnya dalam bahasa Indonesia.
+## ✨ Features
 
-## 🚀 Fitur Utama
+- 🎨 **Modern UI** - Built with shadcn/ui components and Tailwind CSS
+- 🌙 **Dark/Light Theme** - Complete theme switching with next-themes
+- 📱 **Fully Responsive** - Mobile-first design with responsive navigation
+- 🔐 **Authentication Ready** - Login/register pages and user management
+- 📊 **Content Management** - Powerful CMS with Payload
+- ⚡ **Performance** - Built on Next.js 15 with React 19
+- 🎯 **TypeScript** - Full type safety throughout the application
+- 🛠 **Developer Experience** - Hot reload, ESLint, and modern tooling
 
-### ✨ Platform Konferensi
-- **Buat Konferensi** - Penyelenggara dapat membuat konferensi baru dengan mudah
-- **Manajemen Pertanyaan** - Sistem tanya jawab real-time dari audiens
-- **Dashboard Konferensi** - Kelola semua konferensi dari satu tempat
-- **Bagikan Link** - Share konferensi dengan audiens melalui link yang mudah
+## 🛠 Tech Stack
 
-### 🎯 Antarmuka Pengguna
-- **Landing Page Menarik** - Halaman utama yang profesional dan engaging
-- **Navbar Dinamis** - Navigasi yang berubah sesuai status login
-- **Desain Responsif** - Optimal di desktop, tablet, dan mobile
-- **Bahasa Indonesia** - Seluruh interface dalam bahasa Indonesia
+- **Framework**: Next.js 15
+- **React**: React 19
+- **CMS**: Payload CMS
+- **Database**: PostgreSQL (configurable)
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui + Radix UI
+- **Icons**: Lucide React
+- **Theme**: next-themes
+- **State Management**: TanStack Query
+- **TypeScript**: Full type safety
+- **Package Manager**: pnpm
 
-### 🔐 Sistem Autentikasi
-- **Registrasi Pengguna** - Sistem pendaftaran yang mudah
-- **Login/Logout** - Autentikasi yang aman dengan PayloadCMS
-- **Manajemen Profil** - Kelola informasi akun pengguna
-
-### 🛠 Teknologi Modern
-- **Next.js 15** dengan App Router
-- **PayloadCMS 3** untuk backend dan admin panel
-- **TailwindCSS** untuk styling
-- **TypeScript** untuk type safety
-- **React Hook Form** dengan Zod validation
-- **Lucide React** untuk ikon
-
-## 📁 Struktur Proyek
-
-```
-src/
-├── app/                          # Next.js App Router
-│   ├── (frontend)/              # Frontend pages
-│   │   ├── [slug]/             # Dynamic pages
-│   │   ├── auth/               # Authentication pages
-│   │   ├── conferences/        # Conference pages
-│   │   │   ├── [slug]/        # Individual conference
-│   │   │   ├── create/        # Create conference
-│   │   │   └── page.tsx       # Conference list
-│   │   └── layout.tsx         # Frontend layout
-│   └── (payload)/             # PayloadCMS admin
-├── components/                  # Reusable components
-│   ├── LandingPage/            # Landing page component
-│   ├── Navbar/                 # Navigation component
-│   └── ui/                     # UI components
-├── features/                   # Feature-based modules
-│   ├── conferences/            # Conference feature
-│   │   ├── actions/           # Server actions
-│   │   ├── components/        # UI components
-│   │   └── type.ts           # TypeScript types
-│   ├── questions/             # Questions feature
-│   ├── sign-in/              # Sign-in feature
-│   └── sign-up/              # Sign-up feature
-├── collections/               # PayloadCMS collections
-│   ├── Conferences.ts        # Conference collection
-│   ├── Questions.ts          # Questions collection
-│   └── Users.ts             # Users collection
-└── utilities/                # Helper functions
-```
-
-## 🛠 Instalasi dan Setup
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Node.js** 18.20.2+ atau 20.9.0+
-- **pnpm** 9+ atau 10+
-- **Database** SQLite (default) atau PostgreSQL
+- Node.js 18.20.2+ or 20.9.0+
+- pnpm 9+
 
-### Quick Start
+### Development Setup
 
-1. **Clone Repository**
+1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd question-payloadcms
+   git clone <your-repo-url>
+   cd payload-starter
    ```
 
-2. **Install Dependencies**
+2. **Install dependencies**
    ```bash
    pnpm install
    ```
 
-3. **Setup Environment**
+3. **Environment Setup**
    ```bash
    cp .env.example .env
    ```
-   
-   Edit file `.env` dan sesuaikan konfigurasi:
-   ```env
-   PAYLOAD_SECRET=your-secret-key-here
-   DATABASE_URI=file:./question-payloadcms.db
-   NEXT_PUBLIC_SERVER_URL=http://localhost:3000
-   ```
+   Add your database connection string and other environment variables.
 
-4. **Start Development Server**
+4. **Start the development server**
    ```bash
    pnpm dev
    ```
 
-5. **Akses Aplikasi**
-   - Frontend: http://localhost:3000
-   - Admin Panel: http://localhost:3000/admin
+5. **Open your browser**
+   Navigate to `http://localhost:3000`
 
-### Seeding Database
+### First Time Setup
 
-Untuk mengisi database dengan data contoh:
+1. Visit the admin panel at `/admin`
+2. Create your first admin user
+3. Configure your collections and content
 
-1. Login ke admin panel (http://localhost:3000/admin)
-2. Klik tombol "Seed Database" 
-3. Atau gunakan endpoint: http://localhost:3000/api/seed
+## 📁 Project Structure
 
-## 📖 Panduan Penggunaan
-
-### Untuk Penyelenggara Konferensi
-
-1. **Registrasi Akun**
-   - Kunjungi `/auth` untuk membuat akun baru
-   - Isi data registrasi dan login
-
-2. **Buat Konferensi Baru**
-   - Setelah login, klik "Buat Konferensi"
-   - Isi judul dan deskripsi konferensi
-   - Konferensi akan tersedia di dashboard Anda
-
-3. **Bagikan Konferensi**
-   - Salin link konferensi dari dashboard
-   - Bagikan ke audiens melalui media sosial atau platform lain
-   - Audiens dapat langsung mengajukan pertanyaan
-
-4. **Kelola Pertanyaan**
-   - Lihat semua pertanyaan yang masuk secara real-time
-   - Jawab pertanyaan sesuai kebutuhan konferensi
-
-### Untuk Audiens
-
-1. **Akses Konferensi**
-   - Klik link konferensi yang dibagikan penyelenggara
-   - Tidak perlu registrasi untuk mengajukan pertanyaan
-
-2. **Ajukan Pertanyaan**
-   - Isi nama dan pertanyaan Anda
-   - Klik "Kirim Pertanyaan"
-   - Pertanyaan akan langsung ditampilkan
-
-## 🎨 Komponen Utama
-
-### LandingPage
-```tsx
-import LandingPage from '@/components/LandingPage';
-
-<LandingPage 
-  isAuthenticated={true}
-  userName="John Doe"
-  onLogout={handleLogout}
-/>
+```
+src/
+├── app/
+│   ├── (frontend)/          # Public-facing pages
+│   │   ├── layout.tsx       # Main layout with providers
+│   │   ├── page.tsx         # Homepage
+│   │   └── not-found.tsx    # 404 page
+│   └── (payload)/           # Payload CMS admin
+│       └── custom.scss      # Custom admin styling
+├── collections/             # Payload CMS collections
+│   ├── Users/
+│   │   └── config.ts        # User collection with UUID
+│   ├── Posts/
+│   │   └── config.ts        # Blog posts collection
+│   ├── Categories/
+│   │   └── config.ts        # Content categories
+│   └── Media.ts             # Media uploads
+├── fields/
+│   └── slug.ts             # Reusable slug field
+├── components/
+│   ├── layouts/
+│   │   └── navbar.tsx       # Responsive navigation
+│   ├── ui/                  # shadcn/ui components
+│   └── mode-toggle.tsx      # Theme switcher
+├── providers/
+│   ├── QueryProvider.tsx   # TanStack Query setup
+│   └── ThemeProvider.tsx   # Theme provider
+└── lib/
+    └── utils.ts             # Utility functions
 ```
 
-### Navbar
-```tsx
-import Navbar from '@/components/Navbar';
+## 🎨 UI Components
 
-<Navbar 
-  isAuthenticated={true}
-  userName="John Doe"
-  onLogout={handleLogout}
-/>
-```
+This project uses [shadcn/ui](https://ui.shadcn.com/) components including:
 
-### Conference Components
-- `ConferenceForm` - Form pembuatan konferensi
-- `ConferenceDetail` - Halaman detail konferensi
-- `ListConferences` - Daftar semua konferensi
+- Navigation with responsive mobile menu
+- Theme switching (light/dark/system)
+- Cards, buttons, and form components
+- Custom 404 error page
+- Accessible dialog/sheet components
 
-### Question Components
-- `QuestionForm` - Form pengajuan pertanyaan
-- Terintegrasi dengan sistem real-time
-
-## 🔧 Konfigurasi PayloadCMS
-
-### Collections
-
-- **Users** - Manajemen pengguna dengan autentikasi
-- **Conferences** - Data konferensi dengan slug unik
-- **Questions** - Pertanyaan terkait konferensi tertentu
-- **Categories** - Kategorisasi konferensi
-- **Media** - Upload file dan gambar
-
-### Features
-
-- **Autentikasi** - Login/logout dengan session management
-- **Access Control** - Kontrol akses berdasarkan role
-- **Validation** - Validasi data dengan Zod schema
-- **File Upload** - Upload media dengan konfigurasi otomatis
-
-## 🚀 Development
-
-### Available Scripts
+## 🔧 Available Scripts
 
 ```bash
 # Development
-pnpm dev                 # Start development server
-pnpm dev:prod           # Production development mode
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm start        # Start production server
 
-# Build
-pnpm build              # Build for production
-pnpm start              # Start production server
+# Payload CMS
+pnpm payload      # Access Payload CLI
+pnpm generate:types  # Generate TypeScript types
 
-# Database
-pnpm payload migrate    # Run database migrations
-pnpm payload generate:types  # Generate TypeScript types
-
-# Testing
-pnpm test               # Run all tests
-pnpm test:e2e          # Run end-to-end tests
-pnpm test:int          # Run integration tests
-
-# Code Quality
-pnpm lint               # Run ESLint
-pnpm lint:fix          # Fix ESLint issues
+# Quality
+pnpm lint         # Run ESLint
+pnpm test         # Run tests
+pnpm test:e2e     # Run E2E tests
 ```
 
-### Database Options
+## 🐳 Docker Setup (Optional)
 
-#### SQLite (Default)
-```env
-DATABASE_URI=file:./question-payloadcms.db
-```
+For local development with Docker:
 
-#### PostgreSQL
-```bash
-pnpm add @payloadcms/db-postgres
-```
-
-```env
-DATABASE_URI=postgresql://username:password@localhost:5432/database
-```
-
-### Docker Support
-
-```bash
-# Start with Docker
-docker-compose up
-
-# Access application
-open http://localhost:3000
-```
-
-## 🌐 Deployment
-
-### Payload Cloud (Recommended)
-
-1. Push kode ke GitHub repository
-2. Connect ke [Payload Cloud](https://payloadcms.com/new/import)
-3. Deploy otomatis dari GitHub repo
-
-### Vercel
-
-1. Install Vercel adapter
+1. **Update environment variables**
    ```bash
-   pnpm add @payloadcms/db-vercel-postgres
+   # In .env file
+   MONGODB_URI=mongodb://127.0.0.1/<dbname>
    ```
 
-2. Configure database
-   ```typescript
-   // payload.config.ts
-   import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
-   
-   export default buildConfig({
-     db: vercelPostgresAdapter({
-       pool: {
-         connectionString: process.env.POSTGRES_URL || '',
-       },
-     }),
-   })
-   ```
-
-3. Deploy to Vercel
+2. **Start with Docker**
    ```bash
-   vercel --prod
+   docker-compose up -d
    ```
 
-### Self-hosting
+## 📝 Customization
 
-1. Build untuk production
-   ```bash
-   pnpm build
-   ```
+### Adding New Pages
+1. Create new files in `src/app/(frontend)/`
+2. Use existing components from `src/components/ui/`
+3. Follow the established patterns for styling
 
-2. Start server
-   ```bash
-   pnpm start
-   ```
+### Modifying Theme
+- Edit `src/app/(frontend)/styles.css` for global styles
+- Customize shadcn theme in `components.json`
+- Add new color variables as needed
 
-3. Configure reverse proxy (nginx/Apache)
-4. Setup SSL certificate
-5. Configure environment variables
+### Extending Components
+- Add new UI components in `src/components/ui/`
+- Create layout components in `src/components/layouts/`
+- Follow shadcn/ui patterns for consistency
 
-## 🔒 Environment Variables
+## 📊 Payload CMS Configuration
 
-```env
-# Required
-PAYLOAD_SECRET=your-32-character-secret-key
-DATABASE_URI=file:./question-payloadcms.db
-NEXT_PUBLIC_SERVER_URL=http://localhost:3000
+The Payload config is optimized for modern web applications with organized collections:
 
-# Optional
-NODE_ENV=development
-PORT=3000
+### Collection Architecture
+Collections are organized in dedicated directories for better maintainability:
+- Each collection has its own folder with a `config.ts` file
+- Admin grouping for logical organization in the dashboard
+- UUID-based IDs for all collections instead of auto-increment
 
-# For PostgreSQL
-POSTGRES_URL=postgresql://username:password@host:port/database
+### 👥 Users Collection (`/collections/Users/`)
+- **Group**: User Management
+- **Features**: Auth-enabled with admin panel access
+- **ID**: UUID-based for better security
+- **Fields**: Email (default), extensible for custom user fields
 
-# For Vercel Deployment
-VERCEL_PROJECT_PRODUCTION_URL=your-domain.vercel.app
-```
+### 📝 Posts Collection (`/collections/Posts/`)
+- **Group**: Content
+- **Features**: Rich text content management with full blog functionality
+- **ID**: UUID-based
+- **Fields**: 
+  - Title, slug (auto-generated), rich text content
+  - Excerpt, featured image, categories (relationship)
+  - Published date, status (draft/published/archived)
+  - Timestamps for created/updated tracking
 
-## 🧪 Testing
+### 🏷️ Categories Collection (`/collections/Categories/`)
+- **Group**: Content
+- **Features**: Hierarchical content organization
+- **ID**: UUID-based
+- **Fields**:
+  - Name, slug (auto-generated), description
+  - Color coding for visual organization
+  - Parent relationship for nested categories
+  - Timestamps for tracking
 
-### Unit Tests
-```bash
-pnpm test:int
-```
+### 📁 Media Collection
+- **Features**: Upload-enabled collection with image optimization
+- Pre-configured sizes and focal point support
+- Automatic resizing and format conversion
 
-### End-to-End Tests
-```bash
-pnpm test:e2e
-```
+### Admin Organization
+Collections are grouped in the admin panel:
+- **User Management**: Users
+- **Content**: Posts, Categories
+- **Media**: Media uploads
 
-### Test Files
-- `tests/int/` - Integration tests
-- `tests/e2e/` - End-to-end tests dengan Playwright
+For more details, see the [Payload Collections documentation](https://payloadcms.com/docs/configuration/collections).
 
-## 📚 API Documentation
+## 🚀 Deployment
 
-### Conference Endpoints
+### Vercel (Recommended)
+1. Connect your repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
 
-```typescript
-// Get all conferences
-GET /api/conferences
+### Other Platforms
+This Next.js application can be deployed on any platform that supports Node.js:
+- Netlify
+- Railway
+- DigitalOcean App Platform
+- AWS Amplify
 
-// Get conference by slug
-GET /api/conferences/:slug
+## 🛠 Development Tips
 
-// Create conference (authenticated)
-POST /api/conferences
+### Code Quality
+- ESLint and Prettier are pre-configured
+- TypeScript strict mode enabled
+- Automatic code formatting on save
 
-// Delete conference (authenticated)
-DELETE /api/conferences/:id
-```
+### Performance
+- Next.js 15 with React 19 for optimal performance
+- Image optimization with Next.js Image component
+- Lazy loading and code splitting built-in
 
-### Question Endpoints
+### Accessibility
+- shadcn/ui components are built with accessibility in mind
+- ARIA labels and keyboard navigation included
+- Color contrast optimized for WCAG compliance
 
-```typescript
-// Get questions for conference
-GET /api/questions?conference=:slug
+## 📚 Learn More
 
-// Create question
-POST /api/questions
-
-// Questions are public, no authentication required
-```
-
-### Auth Endpoints
-
-```typescript
-// Login
-POST /api/users/login
-
-// Logout
-POST /api/users/logout
-
-// Get current user
-GET /api/users/me
-```
+- [Payload CMS Documentation](https://payloadcms.com/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [shadcn/ui Documentation](https://ui.shadcn.com)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
 ## 🤝 Contributing
 
-1. Fork repository ini
-2. Buat feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
-4. Push ke branch (`git push origin feature/AmazingFeature`)
-5. Buat Pull Request
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-Proyek ini dilisensikan under MIT License - lihat file [LICENSE](LICENSE) untuk detail.
+This project is licensed under the MIT License.
 
-## 🆘 Support
+## 💬 Support
 
-Jika Anda memiliki pertanyaan atau masalah:
-
-- **GitHub Issues**: [Create an issue](https://github.com/your-repo/issues)
-- **Payload Discord**: [Join community](https://discord.com/invite/payload)
-- **Documentation**: [Payload Docs](https://payloadcms.com/docs)
-
-## 🙏 Acknowledgments
-
-- [PayloadCMS](https://payloadcms.com/) - Headless CMS yang powerful
-- [Next.js](https://nextjs.org/) - React framework untuk production
-- [TailwindCSS](https://tailwindcss.com/) - Utility-first CSS framework
-- [Lucide React](https://lucide.dev/) - Beautiful & consistent icons
-
----
-
-**KonfQ** - Platform Tanya Jawab Konferensi yang Modern dan Mudah Digunakan 🚀
+If you have any issues or questions:
+- Create an issue on GitHub
+- Join the [Payload Discord](https://discord.com/invite/payload)
+- Check the [Payload documentation](https://payloadcms.com/docs)

@@ -2,9 +2,12 @@ import { CollectionConfig } from "payload";
 
 const Questions: CollectionConfig = {
   slug: 'questions',
+  trash : true,
   admin: {
     useAsTitle: 'question',
+    group: 'Conferences',
   },
+
   access: {
     read: ({ req }) => !!req.user, // hanya moderator (login) yang bisa lihat
     create: () => true, // publik bisa kirim pertanyaan
@@ -23,11 +26,29 @@ const Questions: CollectionConfig = {
       required: true,
     },
     {
+      name : 'hideName',
+      type : "checkbox",
+      defaultValue : false,
+    },
+    {
+      name : "accept",
+      type : "checkbox",
+      defaultValue : false,
+    },
+    {
       name: 'conference',
       type: 'relationship',
       relationTo: 'conferences',
       required: true,
     },
+    {
+      name : "user",
+      type : "relationship",
+      relationTo : "users",
+      required : false,
+      defaultValue : undefined,
+      hasMany : false
+    }
   ],
 };
 

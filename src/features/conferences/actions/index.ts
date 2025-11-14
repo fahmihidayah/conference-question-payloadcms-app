@@ -3,9 +3,11 @@
 import { getPayload } from "payload";
 import { QuestionFormSchema, ConferenceFormSchema } from "../type";
 import config from "@payload-config";
-import { cookies, headers } from "next/headers";
-import { equal } from "assert";
+import { QueryAction } from "@/types/query-action";
+import { revalidateTag } from "next/cache";
+import { Conference } from "@/payload-types";
 import { getMeUser } from "@/utilities/getMeUser";
+// import { getMeUserServer } from "@/utilities/getMeUserServer";
 
 export const findByIdConferences = async (slug: string) => {
     const payload = await getPayload({ config });
@@ -55,6 +57,7 @@ export const findByIdConferences = async (slug: string) => {
 export const findAllConferences = async () => {
     const payload = await getPayload({ config });
     const user = await getMeUser();
+    if(!user.user) return
     return payload.find({
         collection: "conferences",
         where: {
@@ -62,6 +65,81 @@ export const findAllConferences = async () => {
                 equals: user.user.id
             }
         }
+    });
+}
+
+export const getConferenceById = async ( id : string ) : Promise<Conference | undefined> => {
+    const payload = await getPayload({
+        config
+    })
+
+    return await payload.findByID({
+        collection : "conferences",
+        id : id 
+    })
+}
+
+export const  getConferenceBySlug = async (slug : string) : Promise<Conference | undefined> => {
+    const payload = await getPayload({
+        config
+    })
+
+    const conferenceDocs = await payload.find({
+        collection : "conferences",
+        where : {
+            slug : {
+                equals : slug
+            }
+        }
+    });
+    if(conferenceDocs && conferenceDocs.docs.length > 0) {
+        return conferenceDocs.docs[0];
+    }
+}
+
+export const getConferences = async (queryAction: QueryAction) => {
+    const payload = await getPayload({ config });
+    const user = await getMeUser();
+    if(!user.user) return;
+
+    const limit = 10;
+    const page = queryAction.page || 1;
+
+    // Build the where clause
+    const whereConditions: any[] = [
+        {
+            user: {
+                equals: user.user.id
+            }
+        }
+    ];
+
+    // Add keyword search if provided
+    if (queryAction.keyword && queryAction.keyword.trim() !== '') {
+        whereConditions.push({
+            or: [
+                {
+                    title: {
+                        contains: queryAction.keyword
+                    }
+                },
+                {
+                    description: {
+                        contains: queryAction.keyword
+                    }
+                }
+            ]
+        });
+    }
+
+    return payload.find({
+        collection: "conferences",
+        where: {
+            and: whereConditions
+        },
+        limit,
+        page,
+        sort: '-createdAt'
     });
 }
 
@@ -130,7 +208,7 @@ export const createConferenceAction = async (conferenceForm: ConferenceFormSchem
 
     const user = await getMeUser();
 
-    if (user.user !== null) {
+    if (user.user) {
         const slug = conferenceForm.title.toLowerCase().split(" ").join("-");
 
         const conference = await payload.create({
@@ -142,6 +220,8 @@ export const createConferenceAction = async (conferenceForm: ConferenceFormSchem
                 user: user.user
             }
         });
+
+        revalidateTag("/dashboard/conferences")
 
         return conference;
     }

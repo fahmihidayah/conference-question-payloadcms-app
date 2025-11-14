@@ -1,4 +1,5 @@
 'use client';
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -9,18 +10,15 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-export const SignUpForm = () => {
+export const SignUpForm: React.FC = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitMessage, setSubmitMessage] = useState<string | null>(null);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const router = useRouter();
     
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset
-    } = useForm<SignUpFormSchema>({
+    const form = useForm<SignUpFormSchema>({
         resolver: zodResolver(signUpFormSchema),
         defaultValues: {
             name: "",
@@ -30,117 +28,167 @@ export const SignUpForm = () => {
         }
     });
 
+    const {
+        reset
+    } = form;
+
     const onSubmit = async (data: SignUpFormSchema) => {
         setIsSubmitting(true);
-        setSubmitMessage(null);
+        setSubmitError(null);
+        setSuccessMessage(null);
         
         try {
             const result = await signUpAction(data);
             
             if (result.success) {
-                setSubmitMessage("Pendaftaran berhasil! Anda akan dialihkan ke dashboard...");
+                setSuccessMessage("Pendaftaran berhasil! Anda akan dialihkan ke dashboard...");
                 reset();
                 
                 // Redirect to conferences after successful signup
                 setTimeout(() => {
-                    router.push("/conferences");
+                    router.push("/dashboard");
                     router.refresh(); // Refresh to update auth state
                 }, 2000);
             } else {
-                setSubmitMessage(result.error || "Pendaftaran gagal. Silakan coba lagi.");
+                setSubmitError(result.error || "Pendaftaran gagal. Silakan coba lagi.");
             }
         } catch (error) {
             console.error("Pendaftaran gagal:", error);
-            setSubmitMessage("Terjadi kesalahan saat pendaftaran. Silakan coba lagi.");
+            setSubmitError(error instanceof Error ? error.message : "Terjadi kesalahan saat pendaftaran. Silakan coba lagi.");
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
-                <div className="bg-white rounded-2xl shadow-xl p-8 border border-blue-100">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-blue-100 dark:border-gray-700">
                     {/* Header */}
                     <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold text-blue-900 mb-2">Buat Akun Baru</h1>
-                        <p className="text-blue-600">Bergabunglah dengan KonfQ</p>
+                        <h1 className="text-3xl font-bold text-blue-900 dark:text-blue-400 mb-2">Buat Akun Baru</h1>
+                        <p className="text-blue-600 dark:text-blue-300">Bergabunglah dengan KonfQ</p>
                     </div>
 
-                    {/* Success/Error Message */}
-                    {submitMessage && (
-                        <div className={`mb-6 p-4 rounded-lg ${
-                            submitMessage.includes("berhasil") 
-                                ? "bg-green-50 text-green-800 border border-green-200" 
-                                : "bg-red-50 text-red-800 border border-red-200"
-                        }`}>
-                            {submitMessage}
+                    {/* Success Message */}
+                    {successMessage && (
+                        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                            <p className="text-green-700 dark:text-green-400 text-sm">{successMessage}</p>
+                        </div>
+                    )}
+
+                    {/* Error Message */}
+                    {submitError && (
+                        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                            <p className="text-red-700 dark:text-red-400 text-sm">{submitError}</p>
                         </div>
                     )}
 
                     {/* Form */}
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                        {/* Name Field */}
-                        <Input
-                            {...register("name")}
-                            type="text"
-                            label="Nama Lengkap"
-                            placeholder="Masukkan nama lengkap Anda"
-                            error={errors.name?.message}
-                            required
-                        />
+                    <div className="space-y-6">
+                        <Form  {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                {/* Name Field */}
+                                <FormField
+                                    control={form.control}
+                                    name='name'
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Nama Lengkap</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type='text'
+                                                    placeholder='Masukkan nama lengkap Anda'
+                                                    disabled={isSubmitting}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                        {/* Email Field */}
-                        <Input
-                            {...register("email")}
-                            type="email"
-                            label="Alamat Email"
-                            placeholder="Masukkan email Anda"
-                            error={errors.email?.message}
-                            required
-                        />
+                                {/* Email Field */}
+                                <FormField
+                                    control={form.control}
+                                    name='email'
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Alamat Email</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type='email'
+                                                    placeholder='Masukkan email Anda'
+                                                    disabled={isSubmitting}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                        {/* Password Field */}
-                        <Input
-                            {...register("password")}
-                            type="password"
-                            label="Kata Sandi"
-                            placeholder="Masukkan kata sandi"
-                            error={errors.password?.message}
-                            required
-                        />
+                                {/* Password Field */}
+                                <FormField
+                                    control={form.control}
+                                    name='password'
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Kata Sandi</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type='password'
+                                                    placeholder='Masukkan kata sandi'
+                                                    disabled={isSubmitting}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                        {/* Confirm Password Field */}
-                        <Input
-                            {...register("confirmPassword")}
-                            type="password"
-                            label="Konfirmasi Kata Sandi"
-                            placeholder="Ulangi kata sandi"
-                            error={errors.confirmPassword?.message}
-                            required
-                        />
+                                {/* Confirm Password Field */}
+                                <FormField
+                                    control={form.control}
+                                    name='confirmPassword'
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Konfirmasi Kata Sandi</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type='password'
+                                                    placeholder='Ulangi kata sandi'
+                                                    disabled={isSubmitting}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                        {/* Submit Button */}
-                        <Button
-                            type="submit"
-                            disabled={isSubmitting}
-                            loading={isSubmitting}
-                            loadingText="Mendaftarkan..."
-                            variant="primary"
-                            size="default"
-                            className="w-full"
-                        >
-                            Daftar
-                        </Button>
-                    </form>
+                                {/* Submit Button */}
+                                <Button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    variant="default"
+                                    size="default"
+                                    className="w-full"
+                                >
+                                    {isSubmitting ? "Mendaftarkan..." : "Daftar"}
+                                </Button>
+                            </form>
+                        </Form>
+                    </div>
 
                     {/* Footer */}
                     <div className="mt-8 text-center">
-                        <p className="text-sm text-blue-600">
+                        <p className="text-sm text-blue-600 dark:text-blue-400">
                             Sudah punya akun?{' '}
-                            <Link 
-                                href="/auth" 
-                                className="font-semibold text-blue-700 hover:text-blue-900 hover:underline transition-colors duration-200"
+                            <Link
+                                href="/sign-in"
+                                className="font-semibold text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-100 hover:underline transition-colors duration-200"
                             >
                                 Masuk di sini
                             </Link>

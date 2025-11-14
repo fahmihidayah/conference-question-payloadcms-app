@@ -1,28 +1,23 @@
-import { findByIdConferences } from "@/features/conferences/actions";
-import ConferenceDetail from "@/features/conferences/components/detail";
-import isPageCanBeAccessed from "@/utilities/protectPageUtils";
-import config from "@payload-config";
-import { equal } from "assert";
-import { notFound, redirect } from "next/navigation";
-import { getPayload } from "payload";
+import { getConferenceBySlug } from "@/features/conferences/actions"
+import ConferenceDetail from "@/features/conferences/components/detail"
+import { getListQuestionByConferenceId } from "@/features/questions/actions"
+import { notFound } from "next/navigation"
 
 type Props = {
-    params: Promise<{
-        slug: string
+    params : Promise<{
+        slug : string
     }>
+    searchParams : Promise<{
+        [key : string] : string | string[] | undefined
+    }> 
 }
 
-export default async function CreateQuestion(props: Props) {
-if(! (await isPageCanBeAccessed())) {
-        redirect("/auth")
+export default async function Page(props : Props) {
+    const slug = (await props.params).slug;
+    const conference = await getConferenceBySlug(slug)
+    if(!conference) {
+        notFound()
     }
-
-    const payload = await getPayload({
-        config
-    })
-    const conferenceWithQuestion = await findByIdConferences((await props.params).slug)
-
-    return <div className="flex flex-col w-full h-full mx-auto items-center">
-        <ConferenceDetail conference={conferenceWithQuestion?.conference} questions={conferenceWithQuestion?.questions} />
-    </div>
+    const questions = await getListQuestionByConferenceId(conference?.id)
+    return <ConferenceDetail conference={conference} questions={questions.docs} />
 }

@@ -1,6 +1,6 @@
 
 import { Accounts } from '@/collections/Account'
-import { Users } from '@/collections/Users'
+import { Users } from '@/collections/Users/config'
 import { authPlugin } from 'payload-auth-plugin'
 import {
     Auth0AuthProvider,

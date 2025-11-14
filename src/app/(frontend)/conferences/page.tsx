@@ -1,32 +1,18 @@
-import { findAllConferences } from "@/features/conferences/actions"
-import ListConferences from "@/features/conferences/components/list-conferences"
-import isPageCanBeAccessed from "@/utilities/protectPageUtils";
-import { Pencil, Plus } from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
+import React from 'react';
 
-type Props = {
-    params : Promise<{}>
-}
-
-export default async function Page() {
-    if(! (await isPageCanBeAccessed())) {
-        redirect("/auth")
-    }
-
-    const conferencesDocs = await findAllConferences();
-
-    return <div className="flex flex-col w-full h-full mx-auto container">
-        
-        
-        <div className="flex flex-row justify-between items-center py-4">
-            <p>Conferences</p>
-            <Link href={"conferences/create"} className="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg flex items-center justify-center text-white">
-                <Plus className="w-5 h-5" />
-                Create
-            </Link>
+export default function ConferencesPage() {
+  return (
+    <div className="min-h-screen bg-white p-4">
+      <div className="w-full max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Konferensi</h1>
+          <p className="text-gray-600">Jelajahi dan kelola konferensi Anda</p>
         </div>
-        <ListConferences docs={conferencesDocs} />
+        
+        <div className="text-center py-16">
+          <p className="text-gray-500">Halaman konferensi akan dikembangkan lebih lanjut</p>
+        </div>
+      </div>
     </div>
-
+  );
 }

@@ -1,103 +1,21 @@
-'use client';
+import * as React from "react"
 
-import { cn } from '@/utilities/ui'
-import { Eye, EyeOff } from 'lucide-react';
-import { forwardRef, useState, InputHTMLAttributes } from 'react';
+import { cn } from "@/lib/utils"
 
-export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
-  type?: 'text' | 'number' | 'email' | 'password';
-  label?: string;
-  error?: string;
-  helperText?: string;
-  className?: string;
+function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+  return (
+    <input
+      type={type}
+      data-slot="input"
+      className={cn(
+        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+        className
+      )}
+      {...props}
+    />
+  )
 }
-
-const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ type = 'text', label, error, helperText, className = '', ...props }, ref) => {
-    const [showPassword, setShowPassword] = useState(false);
-    const [currentType, setCurrentType] = useState(type);
-
-    const handlePasswordToggle = () => {
-      setShowPassword(!showPassword);
-      setCurrentType(showPassword ? 'password' : 'text');
-    };
-
-    const baseInputClasses = `
-      text-black
-      flex h-12 w-full rounded-lg border px-4 py-3 text-base transition-all duration-200
-      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-      disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50
-      placeholder:text-gray-400 touch-manipulation
-    `;
-
-    const inputClasses = error
-      ? `${baseInputClasses} border-red-300 focus:ring-red-500 focus:border-red-500`
-      : `${baseInputClasses} border-gray-300 hover:border-gray-400 focus:border-blue-500`;
-
-    const finalInputClasses = cn(
-      inputClasses,
-      type === 'password' ? 'pr-12' : '',
-      className
-    );
-
-    return (
-      <div className="w-full">
-        {label && (
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {label}
-            {props.required && <span className="text-red-500 ml-1">*</span>}
-          </label>
-        )}
-        
-        <div className="relative">
-          <input
-            ref={ref}
-            type={currentType}
-            className={finalInputClasses}
-            style={{
-              WebkitTapHighlightColor: 'transparent',
-              touchAction: 'manipulation'
-            }}
-            {...props}
-          />
-          
-          {type === 'password' && (
-            <button
-              type="button"
-              onClick={handlePasswordToggle}
-              onTouchStart={() => {}}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-md text-gray-400 hover:text-gray-600 transition-colors duration-200 touch-manipulation select-none min-w-[44px] min-h-[44px] flex items-center justify-center"
-              style={{
-                WebkitTapHighlightColor: 'transparent',
-                touchAction: 'manipulation'
-              }}
-              tabIndex={-1}
-            >
-              {showPassword ? (
-                <EyeOff className="w-5 h-5 pointer-events-none" />
-              ) : (
-                <Eye className="w-5 h-5 pointer-events-none" />
-              )}
-            </button>
-          )}
-        </div>
-
-        {error && (
-          <p className="mt-2 text-sm text-red-600">
-            {error}
-          </p>
-        )}
-        
-        {helperText && !error && (
-          <p className="mt-2 text-sm text-gray-500">
-            {helperText}
-          </p>
-        )}
-      </div>
-    );
-  }
-);
-
-Input.displayName = 'Input';
 
 export { Input }

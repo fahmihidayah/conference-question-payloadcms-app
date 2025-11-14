@@ -1,21 +1,16 @@
 import LandingPageWithAuth from '@/components/LandingPage/example'
 import { Metadata } from 'next'
-import { generateMeta } from '@/utilities/generateMeta'
+import { Suspense } from 'react'
 
-
-type Args = {
-  params: Promise<{
-    slug?: string
-  }>
+export default async function HomePage() {
+    return <Suspense>
+        <LandingPageWithAuth />
+    </Suspense>
 }
 
-export default async function Page() {
-    return <LandingPageWithAuth />
-}
-
-export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
     return {
-        title : "Conference App",
-        description : "Conference apps"
+        title : "KonfQ - Platform Tanya Jawab Konferensi",
+        description : "Platform interaktif untuk tanya jawab konferensi yang memungkinkan audiens berpartisipasi aktif dalam diskusi"
     }
 }
